@@ -1,6 +1,7 @@
 import chess
 import time
 import requests
+import json
 
 from crap_ai.ai import AI_AlphaBeta
 from crap_ai.util import convert_to_fen
@@ -30,7 +31,7 @@ UNICODE_CHARS = {
     "WN": "♘",
     "WR": "♖",
     "WP": "♙",
-    "..": ""
+    "..": "",
 }
 
 def getMove(ai, depth, board):
@@ -44,21 +45,36 @@ def getMove(ai, depth, board):
 def updateBoard(chess_tiles):
     # Get new board state
     url = "http://localhost:4576/chessboard"
-    response = requests.get(url)
+    # response = requests.get(url)
 
-    if response.status_code == 200:
-        chess_board = response.json()
-    else:
-        pass
+    # if response.status_code == 200:
+    #     chess_board = response.json()
+    # else:
+    #     print("Board request failed. Status code: " + response.status_code)
+        # return
     
-    new_board = [["BR", "BN", "BB", "BQ", "BK", "BB", "BN", "BR"],
-    ["BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP"],
-    ["..", "..", "..", "..", "..", "..", "..", ".."],
-    ["..", "..", "..", "..", "..", "..", "..", ".."],
-    ["..", "..", "..", "..", "..", "..", "..", ".."],
-    ["..", "..", "..", "..", "..", "..", "..", ".."],
-    ["WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP"],
-    ["WR", "WN", "WB", "WQ", "WK", "WB", "WN", "WR"]]
+    PIECE_DICT = {"P_B":"BP", "P_W":"WP", "B_W":"WB", "B_B":"BB", "N_W":"WN", "N_B":"BN", "K_W":"WK", "K_B":"BK", "Q_B":"BQ", "Q_W":"WQ", "R_W":"WR", "R_B":"BR", "":".."}
+    ROWS = {0:"a",1:"b",2:"c",3:"d",4:"e",5:"f",5:"g", 6:"h"}
+    chess_board = json.loads('{"a1": {"x": 40.0, "y": 30.0, "piece": ""}, "b1": {"x": 120.0, "y": 30.0, "piece": ""}, "c1": {"x": 200.0, "y": 30.0, "piece": ""}, "d1": {"x": 280.0, "y": 30.0, "piece": ""}, "e1": {"x": 360.0, "y": 30.0, "piece": ""}, "f1": {"x": 440.0, "y": 30.0, "piece": ""}, "g1": {"x": 520.0, "y": 30.0, "piece": ""}, "h1": {"x": 600.0, "y": 30.0, "piece": ""}, "a2": {"x": 40.0, "y": 90.0, "piece": ""}, "b2": {"x": 120.0, "y": 90.0, "piece": ""}, "c2": {"x": 40.0, "y": 30.0, "piece": "P_W"}, "d2": {"x": 280.0, "y": 90.0, "piece": ""}, "e2": {"x": 360.0, "y": 90.0, "piece": ""}, "f2": {"x": 40.0, "y": 30.0, "piece": "B_W"}, "g2": {"x": 520.0, "y": 90.0, "piece": ""}, "h2": {"x": 600.0, "y": 90.0, "piece": ""}, "a3": {"x": 40.0, "y": 30.0, "piece": "P_B"}, "b3": {"x": 120.0, "y": 150.0, "piece": ""}, "c3": {"x": 200.0, "y": 150.0, "piece": ""}, "d3": {"x": 280.0, "y": 150.0, "piece": ""}, "e3": {"x": 360.0, "y": 150.0, "piece": ""}, "f3": {"x": 440.0, "y": 150.0, "piece": ""}, "g3": {"x": 520.0, "y": 150.0, "piece": ""}, "h3": {"x": 600.0, "y": 150.0, "piece": ""}, "a4": {"x": 40.0, "y": 210.0, "piece": ""}, "b4": {"x": 40.0, "y": 30.0, "piece": "P_W"}, "c4": {"x": 200.0, "y": 210.0, "piece": ""}, "d4": {"x": 280.0, "y": 210.0, "piece": ""}, "e4": {"x": 40.0, "y": 30.0, "piece": "P_B"}, "f4": {"x": 440.0, "y": 210.0, "piece": ""}, "g4": {"x": 520.0, "y": 210.0, "piece": ""}, "h4": {"x": 600.0, "y": 210.0, "piece": ""}, "a5": {"x": 40.0, "y": 270.0, "piece": ""}, "b5": {"x": 120.0, "y": 270.0, "piece": ""}, "c5": {"x": 200.0, "y": 270.0, "piece": ""}, "d5": {"x": 280.0, "y": 270.0, "piece": ""}, "e5": {"x": 360.0, "y": 270.0, "piece": ""}, "f5": {"x": 440.0, "y": 270.0, "piece": ""}, "g5": {"x": 520.0, "y": 270.0, "piece": ""}, "h5": {"x": 600.0, "y": 270.0, "piece": ""}, "a6": {"x": 40.0, "y": 30.0, "piece": "K_W"}, "b6": {"x": 120.0, "y": 330.0, "piece": ""}, "c6": {"x": 40.0, "y": 30.0, "piece": "R_W"}, "d6": {"x": 280.0, "y": 330.0, "piece": ""}, "e6": {"x": 360.0, "y": 330.0, "piece": ""}, "f6": {"x": 440.0, "y": 330.0, "piece": ""}, "g6": {"x": 520.0, "y": 330.0, "piece": ""}, "h6": {"x": 600.0, "y": 330.0, "piece": ""}, "a7": {"x": 40.0, "y": 390.0, "piece": ""}, "b7": {"x": 40.0, "y": 30.0, "piece": "K_B"}, "c7": {"x": 200.0, "y": 390.0, "piece": ""}, "d7": {"x": 40.0, "y": 30.0, "piece": "N_B"}, "e7": {"x": 360.0, "y": 390.0, "piece": ""}, "f7": {"x": 40.0, "y": 30.0, "piece": "P_B"}, "g7": {"x": 520.0, "y": 390.0, "piece": ""}, "h7": {"x": 600.0, "y": 390.0, "piece": ""}, "a8": {"x": 40.0, "y": 450.0, "piece": ""}, "b8": {"x": 120.0, "y": 450.0, "piece": ""}, "c8": {"x": 200.0, "y": 450.0, "piece": ""}, "d8": {"x": 280.0, "y": 450.0, "piece": ""}, "e8": {"x": 360.0, "y": 450.0, "piece": ""}, "f8": {"x": 440.0, "y": 450.0, "piece": ""}, "g8": {"x": 520.0, "y": 450.0, "piece": ""}, "h8": {"x": 600.0, "y": 450.0, "piece": ""}}')
+    new_board = [[],[],[],[],[],[],[],[]]
+    
+    for i in range(0, 7):
+        for j in range(0, 7):
+            row = ROWS[j]
+            coords = (chess_board[row+str(i+1)]["x"], chess_board[row+str(i+1)]["y"])
+            piece = chess_board[row+str(i+1)]["piece"]
+            new_board[j].append(PIECE_DICT[piece])
+        
+            
+    
+    # new_board = [["BR", "BN", "BB", "BQ", "BK", "BB", "BN", "BR"],
+    # ["BP", "BP", "BP", "BP", "BP", "BP", "BP", "BP"],
+    # ["..", "..", "..", "..", "..", "..", "..", ".."],
+    # ["..", "..", "..", "..", "..", "..", "..", ".."],
+    # ["..", "..", "..", "..", "..", "..", "..", ".."],
+    # ["..", "..", "..", "..", "..", "..", "..", ".."],
+    # ["WP", "WP", "WP", "WP", "WP", "WP", "WP", "WP"],
+    # ["WR", "WN", "WB", "WQ", "WK", "WB", "WN", "WR"]]
     
     # Update UI
     for row in range(0, len(new_board)):

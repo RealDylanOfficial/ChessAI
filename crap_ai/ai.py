@@ -90,7 +90,7 @@ class AI_AlphaBeta: # Class for calculating the best move
         score = 0
         score += heuristics.material(board, 100)
         score += heuristics.piece_moves(board, 50)
-        score += heuristics.pawn_structure(board, 1)
+        # score += heuristics.pawn_structure(board, 1)
         score += heuristics.in_check(board, 1)
 
         return score

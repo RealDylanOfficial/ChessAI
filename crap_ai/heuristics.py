@@ -45,7 +45,7 @@ def piece_moves(game: chess.Board, weight):
             if move.uci()[2:4] in square_values:
                 black_points -= square_values[move.uci()[2:4]]
 
-    return black_points
+    return black_points * weight
 
 def pawn_structure(board_state: chess.Board, weight):
     black_points = 0
