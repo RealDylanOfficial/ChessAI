@@ -34,13 +34,28 @@ UNICODE_CHARS = {
     "..": "",
 }
 
+def sendMove(move_data):
+    SERVER = "http://10.205.38.238:5000/move"
+    move_data = {"move": move_data}
+    print(move_data)
+    try:
+        response = requests.post(SERVER, json=move_data)
+        if response.status_code == 200:
+            print("Move sent successfully")
+        else:
+            print("Failed to send move:", response.text)
+    except Exception as e:
+        print("Error sending move to server:", str(e))
+        
 def getMove(ai, depth, board, move_label, time_label):
     # Generate move
     start_time = time.time()
     ai_move = ai.get_move(board, depth)
     move_label.config(text="Move: "+str(ai_move))
     time_label.config(text="Time: "+str(time.time()-start_time))
-    # Send move to arm
+    
+    sendMove(str(ai_move))
+    print(str(ai_move))
     
 def rotate_list_of_lists(board):
     return [list(row) for row in zip(*board)]
